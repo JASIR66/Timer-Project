@@ -1,7 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/amrita_logo"
-    android:gravity="center">
-</RelativeLayout>
+    android:background="@color/light_blue"> <!-- Light Blue Background -->
+
+    <!-- Amrita Logo -->
+    <ImageView
+        android:id="@+id/amrita_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/amrita_logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Timer display -->
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textSize="48sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/amrita_logo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/inputFields"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- Input fields for hours, minutes, and seconds -->
+    <LinearLayout
+        android:id="@+id/inputFields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/timerText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <EditText
+            android:id="@+id/hourInput"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:hint="H"
+            android:inputType="number"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:maxLines="1"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:textColorHint="@android:color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" : "
+            android:textSize="24sp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:id="@+id/minuteInput"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:hint="M"
+            android:inputType="number"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:maxLines="1"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:textColorHint="@android:color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" : "
+            android:textSize="24sp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:id="@+id/secondInput"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:hint="S"
+            android:inputType="number"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:maxLines="1"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:textColorHint="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- Buttons for Start, Pause, Reset -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/inputFields"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            app:layout_constraintEnd_toStartOf="@id/pauseButton"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/pauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pause"
+            app:layout_constraintEnd_toStartOf="@id/resetButton"/>
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
