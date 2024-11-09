@@ -11,83 +11,99 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView timerText;
-    private Button startButton, pauseButton, resetButton;
+    private TextView timerDisplay;
     private EditText hourInput, minuteInput, secondInput;
+    private Button startButton, pauseButton, resetButton;
+
     private CountDownTimer countDownTimer;
-    private boolean isTimerRunning = false;
-    private long timeLeftInMillis;
+    private boolean timerRunning = false;
+    private long timeLeftInMillis = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize views
-        timerText = findViewById(R.id.timerText);
-        startButton = findViewById(R.id.startButton);
-        pauseButton = findViewById(R.id.pauseButton);
-        resetButton = findViewById(R.id.resetButton);
+        timerDisplay = findViewById(R.id.timerDisplay);
         hourInput = findViewById(R.id.hourInput);
         minuteInput = findViewById(R.id.minuteInput);
         secondInput = findViewById(R.id.secondInput);
 
-        // Start button logic
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isTimerRunning) {
-                    startTimer();
-                }
-            }
-        });
+        startButton = findViewById(R.id.startButton);
+        pauseButton = findViewById(R.id.pauseButton);
+        resetButton = findViewById(R.id.resetButton);
 
-        // Pause button logic
-        pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseTimer();
-            }
-        });
+        startButton.setOnClickListener(v -> startTimer());
+        pauseButton.setOnClickListener(v -> pauseTimer());
+        resetButton.setOnClickListener(v -> resetTimer());
 
-        // Reset button logic
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetTimer();
-            }
-        });
+        // Initially, disable the pause button
+        pauseButton.setEnabled(false);
     }
 
     private void startTimer() {
-        try {
-            int hours = Integer.parseInt(hourInput.getText().toString());
-            int minutes = Integer.parseInt(minuteInput.getText().toString());
-            int seconds = Integer.parseInt(secondInput.getText().toString());
-            timeLeftInMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
+        // Input validation
+        String hourText = hourInput.getText().toString();
+        String minuteText = minuteInput.getText().toString();
+        String secondText = secondInput.getText().toString();
 
-            countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
-                public void onTick(long millisUntilFinished) {
-                    timeLeftInMillis = millisUntilFinished;
-                    updateTimerText();
-                }
-
-                public void onFinish() {
-                    isTimerRunning = false;
-                    timerText.setText("00:00:00");
-                }
-            }.start();
-
-            isTimerRunning = true;
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();
+        if (hourText.isEmpty() || minuteText.isEmpty() || secondText.isEmpty()) {
+            Toast.makeText(this, "Please enter values for hours, minutes, and seconds.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        long hours = 0, minutes = 0, seconds = 0;
+        try {
+            hours = Long.parseLong(hourText);
+            minutes = Long.parseLong(minuteText);
+            seconds = Long.parseLong(secondText);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter valid numeric values.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Calculate time in milliseconds
+        timeLeftInMillis = (hours * 3600000) + (minutes * 60000) + (seconds * 1000);
+
+        if (timeLeftInMillis <= 0) {
+            Toast.makeText(this, "Please enter a valid time greater than 0.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Start the countdown timer
+        if (timerRunning) {
+            // If the timer is already running, cancel it and reset
+            countDownTimer.cancel();
+            timerRunning = false;
+        }
+
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                updateTimer();
+            }
+
+            @Override
+            public void onFinish() {
+                timerDisplay.setText("00:00:00");
+                timerRunning = false;
+                startButton.setEnabled(true);  // Re-enable Start button after finish
+                pauseButton.setEnabled(false); // Disable Pause button after timer finishes
+            }
+        }.start();
+
+        timerRunning = true;
+        startButton.setEnabled(false);  // Disable Start button while timer is running
+        pauseButton.setEnabled(true);  // Enable Pause button while timer is running
     }
 
     private void pauseTimer() {
-        if (isTimerRunning) {
+        if (timerRunning) {
             countDownTimer.cancel();
-            isTimerRunning = false;
+            timerRunning = false;
+            startButton.setEnabled(true);  // Re-enable Start button when paused
+            pauseButton.setEnabled(false); // Disable Pause button when timer is paused
         }
     }
 
@@ -95,18 +111,24 @@ public class MainActivity extends AppCompatActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-        isTimerRunning = false;
+        timerDisplay.setText("00:00:00");
         timeLeftInMillis = 0;
-        timerText.setText("00:00:00");
+        timerRunning = false;
+        startButton.setEnabled(true);  // Enable Start button when reset
+        pauseButton.setEnabled(false); // Disable Pause button when reset
+
+        // Optionally clear the inputs
         hourInput.setText("");
         minuteInput.setText("");
         secondInput.setText("");
     }
 
-    private void updateTimerText() {
-        int hours = (int) (timeLeftInMillis / 1000) / 3600;
-        int minutes = (int) ((timeLeftInMillis / 1000) % 3600) / 60;
-        int seconds = (int) (timeLeftInMillis / 1000) % 60;
-        timerText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+    private void updateTimer() {
+        int hours = (int) (timeLeftInMillis / 3600000);
+        int minutes = (int) ((timeLeftInMillis % 3600000) / 60000);
+        int seconds = (int) ((timeLeftInMillis % 60000) / 1000);
+
+        String timeFormatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        timerDisplay.setText(timeFormatted);
     }
 }
