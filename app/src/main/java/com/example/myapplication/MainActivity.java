@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private boolean timerRunning = false;
     private long timeLeftInMillis = 0;
+    private long timeAtPause = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initially, disable the pause button
         pauseButton.setEnabled(false);
+        pauseButton.setVisibility(View.INVISIBLE);  // Hide the pause button initially
     }
 
     private void startTimer() {
@@ -90,17 +92,20 @@ public class MainActivity extends AppCompatActivity {
                 timerRunning = false;
                 startButton.setEnabled(true);  // Re-enable Start button after finish
                 pauseButton.setEnabled(false); // Disable Pause button after timer finishes
+                pauseButton.setVisibility(View.INVISIBLE);  // Hide Pause button when finished
             }
         }.start();
 
         timerRunning = true;
         startButton.setEnabled(false);  // Disable Start button while timer is running
         pauseButton.setEnabled(true);  // Enable Pause button while timer is running
+        pauseButton.setVisibility(View.VISIBLE);  // Make sure it's visible when the timer starts
     }
 
     private void pauseTimer() {
         if (timerRunning) {
             countDownTimer.cancel();
+            timeAtPause = timeLeftInMillis;  // Store the current time left
             timerRunning = false;
             startButton.setEnabled(true);  // Re-enable Start button when paused
             pauseButton.setEnabled(false); // Disable Pause button when timer is paused
@@ -113,9 +118,11 @@ public class MainActivity extends AppCompatActivity {
         }
         timerDisplay.setText("00:00:00");
         timeLeftInMillis = 0;
+        timeAtPause = 0;
         timerRunning = false;
         startButton.setEnabled(true);  // Enable Start button when reset
         pauseButton.setEnabled(false); // Disable Pause button when reset
+        pauseButton.setVisibility(View.INVISIBLE);  // Optionally hide the pause button when reset
 
         // Optionally clear the inputs
         hourInput.setText("");

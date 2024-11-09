@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pause"
-            android:enabled="false"
+
             android:layout_margin="10dp"/>
 
         <Button
@@ -119,25 +119,5 @@
             android:text="Reset"
             android:layout_margin="10dp"/>
     </LinearLayout>
-
-    <!-- Vertical guideline to center the layout -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.5"
-        android:orientation="vertical"/>
-
-    <!-- Constraint to center the entire layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/centerLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
