@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioButton android:id="@+id/sound1" android:text="Sound 1" />
+    <RadioButton android:id="@+id/sound2" android:text="Sound 2" />
+    <RadioButton android:id="@+id/sound3" android:text="Sound 3" />
+</LinearLayout>
